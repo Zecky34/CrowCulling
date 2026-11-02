@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "CrowCulling",
   "description": "Hides far players in crowded servers, but keeps the ones you fight visible.",
-  "authors": ["Senİnİsmin"],
+  "authors": ["Zecky34"],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
