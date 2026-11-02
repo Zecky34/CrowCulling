@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.crow.crowculling.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "RenderMixin",
+    "DamageMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
