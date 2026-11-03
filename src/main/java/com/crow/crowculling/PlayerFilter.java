@@ -36,7 +36,7 @@ public class PlayerFilter {
         if (mc.player == null) return false;
 
         double range = CrowConfig.INSTANCE.range;
-        if (mc.player.squaredDistanceTo(e) <= range * range && range > 0) return false;
+        if (range > 0 && mc.player.squaredDistanceTo(e) <= range * range) return false;
 
         Long until = TRACKED.get(e.getUuid());
         if (until != null) {
@@ -65,6 +65,11 @@ public class PlayerFilter {
     }
 
     public static void tick() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player != null && (mc.player.isDead() || mc.player.getHealth() <= 0)) {
+            reset();
+            return;
+        }
         if (originalViewDistance != null
                 && (!CrowConfig.INSTANCE.reduceRenderDistance
                     || System.currentTimeMillis() >= combatUntil)) {
