@@ -5,7 +5,7 @@
   "name": "CrowCulling",
   "icon": "assets/crowculling/icon.png",
   "description": "Hides far players in crowded servers, but keeps the ones you fight visible.",
-  "authors": ["SENIN_ISMIN"],
+  "authors": ["Zecky34"],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
