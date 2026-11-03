@@ -31,7 +31,7 @@ Using the Mod Menu settings, you set a block distance and, optionally, a render 
 
 ## Requirements
 
-- Minecrausedft 1.21.11 (other versions may come in the future)
+- Minecraft 1.21.11 (other versions may come in the future)
 - Java 21 or newer
 - Fabric Loader 0.18.0 or newer
 - Fabric API (built and tested with 0.141.3+1.21.11)
