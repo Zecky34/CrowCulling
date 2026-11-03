@@ -8,6 +8,9 @@
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
+    "client": ["com.crow.crowculling.CrowCullingClient"],
+    "modmenu": ["com.crow.crowculling.ModMenuIntegration"]
+  },
     "client": ["com.crow.crowculling.CrowCullingClient"]
   },
   "mixins": ["crowculling.mixins.json"],
