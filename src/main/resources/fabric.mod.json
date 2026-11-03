@@ -3,15 +3,14 @@
   "id": "crowculling",
   "version": "${version}",
   "name": "CrowCulling",
+  "icon": "assets/crowculling/icon.png",
   "description": "Hides far players in crowded servers, but keeps the ones you fight visible.",
-  "authors": ["Zecky34"],
+  "authors": ["SENIN_ISMIN"],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
     "client": ["com.crow.crowculling.CrowCullingClient"],
     "modmenu": ["com.crow.crowculling.ModMenuIntegration"]
-  },
-    "client": ["com.crow.crowculling.CrowCullingClient"]
   },
   "mixins": ["crowculling.mixins.json"],
   "depends": {
