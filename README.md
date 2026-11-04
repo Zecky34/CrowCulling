@@ -10,14 +10,14 @@ On multiplayer servers, when you take damage from a player or deal damage to a p
 
 Using the Mod Menu settings, you set a block distance and, optionally, a render distance. When you take damage from or deal damage to another player:
 
-- For 15 seconds, players farther than your chosen block distance (0–15 blocks) are not rendered.
+- For 15 seconds, players farther than your chosen block distance (0–25 blocks) are not rendered.
 - If render distance changing is enabled, your render distance is set to the chosen value for 15 seconds (it can be lowered or raised).
 - When the 15 seconds are over, or when you die, both player rendering and your render distance return to normal.
 
 ## Features
 
 - Render distance changes to your chosen value for 15 seconds after dealing or taking damage from a player.
-- Players beyond your chosen block distance (0–15 blocks) are not rendered during combat.
+- Players beyond your chosen block distance (0–25 blocks) are not rendered during combat.
 - If no damage is dealt or taken for 15 seconds, everything returns to normal.
 - Everything also returns to normal when you die.
 
