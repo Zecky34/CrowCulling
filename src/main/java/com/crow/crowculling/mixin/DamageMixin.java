@@ -15,9 +15,22 @@ public class DamageMixin {
     @Inject(method = "onEntityDamage", at = @At("HEAD"))
     private void crowculling$onDamage(EntityDamageS2CPacket packet, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null || mc.world == null) return;
-        if (packet.entityId() != mc.player.getId()) return;
-        Entity attacker = mc.world.getEntityById(packet.sourceCauseId());
-        if (attacker != null) PlayerFilter.track(attacker);
+        int victimId = packet.entityId();
+        int attackerId = packet.sourceCauseId();
+
+        mc.execute(() -> {
+            if (mc.player == null || mc.world == null) return;
+            int myId = mc.player.getId();
+
+            if (victimId == myId) {
+                // Biz hasar yedik: saldırgan takip edilir
+                Entity attacker = mc.world.getEntityById(attackerId);
+                if (attacker != null) PlayerFilter.track(attacker);
+            } else if (attackerId == myId) {
+                // Biz hasar verdik: kurban takip edilir
+                Entity victim = mc.world.getEntityById(victimId);
+                if (victim != null) PlayerFilter.trackHit(victim);
+            }
+        });
     }
 }
