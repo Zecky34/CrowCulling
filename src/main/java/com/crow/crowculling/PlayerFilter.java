@@ -12,11 +12,16 @@ import net.minecraft.entity.Entity;
 public class PlayerFilter {
     public static final Map<UUID, Long> TRACKED = new ConcurrentHashMap<>();
     public static final long KEEP_MS = 15000;
+    // Tek tick'te bu kadar blok yer değiştirirsek ışınlanma sayılır
+    public static final double TELEPORT_DISTANCE = 100;
 
     private static volatile long combatUntil = 0;
     private static volatile UUID lastHitUuid = null;
     private static Integer originalViewDistance = null;
     private static Object lastPlayer = null;
+    private static Object lastWorld = null;
+    private static boolean hasLastPos = false;
+    private static double lastX, lastY, lastZ;
 
     // Hasar yediğimizde çağrılır
     public static void track(Entity e) {
@@ -80,13 +85,28 @@ public class PlayerFilter {
         MinecraftClient mc = MinecraftClient.getInstance();
         var me = mc.player;
 
-        // Oyuncu nesnesi değiştiyse (yeniden doğma, dünya/boyut değişimi)
-        if (me != lastPlayer) {
+        // Oyuncu nesnesi ya da dünya değiştiyse (yeniden doğma, boyut/sunucu değişimi)
+        if (me != lastPlayer || mc.world != lastWorld) {
             lastPlayer = me;
+            lastWorld = mc.world;
+            hasLastPos = false;
             reset();
             return;
         }
         if (me == null) return;
+
+        // Işınlanma tespiti (spawn'a ışınlanma vb.)
+        double x = me.getX(), y = me.getY(), z = me.getZ();
+        if (hasLastPos) {
+            double dx = x - lastX, dy = y - lastY, dz = z - lastZ;
+            if (dx * dx + dy * dy + dz * dz > TELEPORT_DISTANCE * TELEPORT_DISTANCE) {
+                lastX = x; lastY = y; lastZ = z;
+                reset();
+                return;
+            }
+        }
+        lastX = x; lastY = y; lastZ = z;
+        hasLastPos = true;
 
         // Kendi ölümümüz
         if (me.isDead() || me.getHealth() <= 0
