@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.Entity;
 
@@ -13,8 +14,11 @@ public class PlayerFilter {
     public static final long KEEP_MS = 15000;
 
     private static volatile long combatUntil = 0;
+    private static volatile UUID lastHitUuid = null;
     private static Integer originalViewDistance = null;
+    private static Object lastPlayer = null;
 
+    // Hasar yediğimizde çağrılır
     public static void track(Entity e) {
         if (e instanceof OtherClientPlayerEntity) {
             long until = System.currentTimeMillis() + KEEP_MS;
@@ -22,6 +26,14 @@ public class PlayerFilter {
             combatUntil = until;
             MinecraftClient.getInstance().execute(PlayerFilter::applyReducedDistance);
         }
+    }
+
+    // Vurduğumuzda çağrılır
+    public static void trackHit(Entity e) {
+        if (e instanceof OtherClientPlayerEntity) {
+            lastHitUuid = e.getUuid();
+        }
+        track(e);
     }
 
     public static boolean shouldHide(Entity e) {
@@ -66,10 +78,37 @@ public class PlayerFilter {
 
     public static void tick() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player != null && (mc.player.isDead() || mc.player.getHealth() <= 0)) {
+        var me = mc.player;
+
+        // Oyuncu nesnesi değiştiyse (yeniden doğma, dünya/boyut değişimi)
+        if (me != lastPlayer) {
+            lastPlayer = me;
             reset();
             return;
         }
+        if (me == null) return;
+
+        // Kendi ölümümüz
+        if (me.isDead() || me.getHealth() <= 0
+                || me.isSpectator() || mc.currentScreen instanceof DeathScreen) {
+            reset();
+            return;
+        }
+
+        // En son vurduğumuz oyuncu öldü mü
+        UUID hit = lastHitUuid;
+        if (hit != null && mc.world != null) {
+            for (var p : mc.world.getPlayers()) {
+                if (p.getUuid().equals(hit)) {
+                    if (p.isDead() || p.getHealth() <= 0) {
+                        reset();
+                        return;
+                    }
+                    break;
+                }
+            }
+        }
+
         if (originalViewDistance != null
                 && (!CrowConfig.INSTANCE.reduceRenderDistance
                     || System.currentTimeMillis() >= combatUntil)) {
@@ -80,6 +119,7 @@ public class PlayerFilter {
     public static void reset() {
         restoreDistance();
         combatUntil = 0;
+        lastHitUuid = null;
         TRACKED.clear();
     }
 }
