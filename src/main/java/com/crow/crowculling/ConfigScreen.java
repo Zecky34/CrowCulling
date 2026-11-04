@@ -44,6 +44,11 @@ public class ConfigScreen extends Screen {
                 .dimensions(x, y + 120, w, 20).build());
     }
 
+    private Text hideToggleText() {
+        return Text.literal("Hide distant players in combat: "
+                + (CrowConfig.INSTANCE.hidePlayers ? "ON" : "OFF"));
+    }
+
     private Text toggleText() {
         return Text.literal("Lower render distance in combat: "
                 + (CrowConfig.INSTANCE.reduceRenderDistance ? "ON" : "OFF"));
@@ -63,31 +68,4 @@ public class ConfigScreen extends Screen {
 
     private static class IntSlider extends SliderWidget {
         private final int min, max;
-        private final IntFunction<String> format;
-        private final IntConsumer onChange;
-
-        IntSlider(int x, int y, int w, int h, int min, int max, int value,
-                  IntFunction<String> format, IntConsumer onChange) {
-            super(x, y, w, h, Text.empty(), (value - min) / (double) (max - min));
-            this.min = min;
-            this.max = max;
-            this.format = format;
-            this.onChange = onChange;
-            updateMessage();
-        }
-
-        private int current() {
-            return min + (int) Math.round(value * (max - min));
-        }
-
-        @Override
-        protected void updateMessage() {
-            setMessage(Text.literal(format.apply(current())));
-        }
-
-        @Override
-        protected void applyValue() {
-            onChange.accept(current());
-        }
-    }
-}
+        private f
