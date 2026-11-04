@@ -16,6 +16,7 @@ public class CrowConfig {
 
     public int range = 15;                    // 0-25
     public boolean reduceRenderDistance = false;
+    public boolean hidePlayers = true;
     public int combatRenderDistance = 5;      // 2-16 chunk
 
     public static void load() {
