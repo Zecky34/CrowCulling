@@ -13,7 +13,7 @@ public class CrowCullingClient implements ClientModInitializer {
         CrowConfig.load();
 
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-            if (world.isClient()) PlayerFilter.track(entity);
+            if (world.isClient()) PlayerFilter.trackHit(entity);
             return ActionResult.PASS;
         });
 
