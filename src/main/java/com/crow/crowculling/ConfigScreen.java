@@ -22,21 +22,26 @@ public class ConfigScreen extends Screen {
         CrowConfig cfg = CrowConfig.INSTANCE;
         int w = 220, x = width / 2 - w / 2, y = height / 4;
 
-        addDrawableChild(new IntSlider(x, y, w, 20, 0, 25, cfg.range,
+        addDrawableChild(ButtonWidget.builder(hideToggleText(), b -> {
+            cfg.hidePlayers = !cfg.hidePlayers;
+            b.setMessage(hideToggleText());
+        }).dimensions(x, y, w, 20).build());
+
+        addDrawableChild(new IntSlider(x, y + 28, w, 20, 0, 25, cfg.range,
                 v -> v == 0 ? "Hide distance: 0 (only fought players)" : "Hide distance: " + v + " blocks",
                 v -> cfg.range = v));
 
         addDrawableChild(ButtonWidget.builder(toggleText(), b -> {
             cfg.reduceRenderDistance = !cfg.reduceRenderDistance;
             b.setMessage(toggleText());
-        }).dimensions(x, y + 28, w, 20).build());
+        }).dimensions(x, y + 56, w, 20).build());
 
-        addDrawableChild(new IntSlider(x, y + 56, w, 20, 2, 16, cfg.combatRenderDistance,
+        addDrawableChild(new IntSlider(x, y + 84, w, 20, 2, 16, cfg.combatRenderDistance,
                 v -> "Combat render distance: " + v + " chunks",
                 v -> cfg.combatRenderDistance = v));
 
         addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> close())
-                .dimensions(x, y + 92, w, 20).build());
+                .dimensions(x, y + 120, w, 20).build());
     }
 
     private Text toggleText() {
